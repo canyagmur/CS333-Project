@@ -3,12 +3,14 @@
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\DeclareUnicodeCharacter{2212}{-}
 \begin{document}
 
 \title{ \large{CS 333 - Algorithm Analysis} \\ 
@@ -38,13 +40,11 @@ goksel.verep@ozu.edu.tr}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+From a theoretical perspective, prime numbers are building blocks of whole numbers according to number theorists. On the other hand, prime numbers have been used in a variety of crucial applications such as encryption of the data. Hence, finding prime numbers is important to discover. However, determining for a given arbitrarily large integer whether it is prime number or not is not an easy task. In this paper, instead of deterministic algorithms which need relatively large computations, practical probabilistic algorithm is presented. If the algorithm states that a given number is composite, then the result is always true, but when it states the number is a prime, there is a relatively small deterministic probability of error. The main advantage of this algorithm is that the test of primality of n requires in the worst case “$c(\log_2 n)^2$” steps where c is about 100. Thus, very large numbers are practical to use in this test.
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+number theory, primality, probabilistic, encryption
 \end{IEEEkeywords}
 
 
@@ -96,10 +96,43 @@ component, formatting, style, styling, insert
     ...  
 
 \subsection{The Algorithm}\label{AA}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
+Given a positive odd integer $n>4$, an integer $k$ is chosen by the tester to determine the desired reliability of the test. Let $n = 2^l*m+1$, where $m$ is odd positive integer. The following process repeated $k$ times. A random integer $b$ is picked in the range $[1,n-1]$. Then, $x \equiv b^m\mod{n}$ is computed. If $x$ is equivalent to  $1$ or $n-1$, then n is said to be \textbf{"strong probable prime to base b"}. Hence, b is not \textbf{witness to the compositeness to n} so next random integer can be picked to do the next iteration of the process. Otherwise,  the following process is repeated $l-1$ times. Compute $x \equiv x^2\mod{n}$. If $x=1$, $n$ is definitely composite so terminate the process. If $x=n-1$, then n is strong probable prime to base b; therefore, next iteration of the process can be executed. If repeating $m-1$ times is executed without jumping to somewhere else, n is definitely composite number; therefore, the process can be terminated. If repeating $k$ times is executed without returning a value, n is a prime number with a probability of error rate $1/4^k$; therefore the process is terminated.
+
+\subsection*{Pseudocode}
+
+\begin{algorithm}
+\begin{algorithmic}
+\REQUIRE Odd integer $n>4$ to be  tested for primality
+\REQUIRE $k$, a parameter that determines the reliability 
+\ENSURE  $n = 2^l*m+1$ where $m$ is odd integer
+\STATE LOOP: 
+\REPEAT
+    \STATE Pick a random number $b$ in the range [2, n − 1]
+    \STATE $x \leftarrow   b^m \mod{ n}$
+    \IF{$x=1$ or $x=n-1$}
+        \STATE do next LOOP
+    \ENDIF
+    \REPEAT
+        \STATE $x \leftarrow   x^2 \mod{ n}$
+        \IF{$x=1$}
+            \RETURN{COMPOSITE}
+        \ENDIF
+        \IF{$x=n-1$}
+            \STATE do next LOOP
+        \ENDIF
+    \UNTIL{$l-1$ times}
+    \RETURN{COMPOSITE}
+
+\UNTIL{k times}
+\RETURN{PRIME}
+
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
 
 \subsection{The Implementation}
     Write here ... \\
