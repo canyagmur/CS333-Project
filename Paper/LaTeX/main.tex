@@ -8,6 +8,9 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{biblatex}
+\usepackage{url}
+\addbibresource{refs.bib}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \DeclareUnicodeCharacter{2212}{-}
@@ -15,7 +18,7 @@
 
 \title{ \large{CS 333 - Algorithm Analysis} \\ 
         \Huge{Project Progress Report}\\
-        {\large Probabilistic Algorithm For Testing Primality }
+        {\large Probabilistic Algorithm For Testing Primality\cite{rabin1980probabilistic} }
 }
 
 \author{\IEEEauthorblockN{İsmail Can Yagmur}
@@ -51,50 +54,42 @@ number theory, primality, probabilistic, encryption
 
 
 \section{Introduction}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
+Testing primality is an important algorithmic problem. Determining primality has occupied computer scientists and mathematicians for centuries. The algorithms that have been proposed for determining whether a given number is prime or composite are generally restricted to special cases or taking a lot of time and effort and especially not applicable for large numbers. In this paper, a practical probabilistic algorithm is presented for testing large numbers in an arbitrary form for primality. The result of the algorithm is always true when it asserts that a given number is composite. On the other hand, there exists provably small probability error when the algorithm asserts that a given number is prime. 
+
+Thus far various algorithms are proposed for testing primality. Some of these algorithms are deterministic and some of them are probabilistic. Although deterministic algorithms always give true results for composite and prime numbers, generally their run time complexity is not polynomial. One of the most famous and fastest deterministic algorithms is AKS primality test which is created by Agrawal, Kayal, and Saxena. AKS algorithm is a polynomial time algorithm and commonly used in cryptology. Probabilistic tests are much faster but not always accurate. Fermat primality test, Miller-Rabin primality test, ,Frobenius primality test and Baillie–PSW primality test are probabilistic tests. Miller-Rabin is the most commonly used probabilistic algorithm since  tests are easy to implement and have an efficient run time complexity. 
+
+In Section II, we discuss the fundamentals of Probabilistic Algorithm for Testing Primality and the mathematical idea behind the algorithm.  In Section III, we discuss the algorithm details and how the implementations of the probabilistic algorithms are done for testing large numbers primality. In Section IV, we analyze the test result according to runtime efficiency and correctness. In Section V, we summarize the main aim of the paper and list  open questions and possible future work.
+
 
 
 
 
 \section{Background}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ... 
-    
-\subsection*{Definition}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
-    
-\subsection*{Theorem 1.}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
-\subsection*{Lemma  2.}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
-\subsection*{Lemma  3.}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
-
-
+\subsection{Problem Statement}
+Determining whether a integer is prime or not is one of the most important problems for centuries. Nevertheless, all deterministic methods that test the primality of integers are not applicable for very big integers practically because even the new version of AKS\cite{lenstra2019primality} primality test,the fastest deterministic method for big arbitrary integers n, has complexity $O((logn)^{6})$. Miller-Rabin probabilistic algorithm intends to test primality of big arbitrary numbers practically. The result of algorithm is always true when it states that integer is composite and it has small probability of error when it states that integer is prime. The complexity of Miller-Rabin algorithm can be pushed to $O(klog^{3}n)$ using repeated squaring multiplication which makes it applicable for big integers.\cite{unknown-author-2022}.     
+\subsection{Definitions and Notations}
+Throughout this paper,
+\begin{enumerate}
+    \item $(a,b)$ denotes the greatest common divisor(g.c.d) of the integers a,b
+    \item $res(a,b)$ denotes the least non negative residue of a when divided by b
+    \item $b|a$ denotes the fact that b divides a, i.e., $res(a,b)=0$
+    \item Let n and b be integers. $W_n(b)$ denotes,
+    \begin{enumerate}[(i)]
+        \item $1 \leq b < n$;
+        \item
+        \begin{enumerate}[(a)]
+            \item $b^{n-1} \not\equiv 1 \pmod{n}$ or
+            \item $\exists i \: s.t. \: 2^{i} | (n-1)$ and $1 < (b^{(n-1)/2^{i}} - 1,n) < n$
+        \end{enumerate}
+    \end{enumerate}
+    The denoted equation is called that such an integer b a witness to the compositeness of n
+    \item $c(S)$ denotes that the number of elements in the set $S$
+    \item $E_n$ denotes the set of all c where $1 \leq c < n, \: (c,n) = 1$
+    \item $\phi$ denotes Euler's function
+\end{enumerate}
+ 
 
 \section{The Probabilistic Method}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
-
 \subsection{The Algorithm}\label{AA}
 Given a positive odd integer $n>4$, an integer $k$ is chosen by the tester to determine the desired reliability of the test. Let $n = 2^l*m+1$, where $m$ is odd positive integer. The following process repeated $k$ times. A random integer $b$ is picked in the range $[1,n-1]$. Then, $x \equiv b^m\mod{n}$ is computed. If $x$ is equivalent to  $1$ or $n-1$, then n is said to be \textbf{"strong probable prime to base b"}. Hence, b is not \textbf{witness to the compositeness to n} so next random integer can be picked to do the next iteration of the process. Otherwise,  the following process is repeated $l-1$ times. Compute $x \equiv x^2\mod{n}$. If $x=1$, $n$ is definitely composite so terminate the process. If $x=n-1$, then n is strong probable prime to base b; therefore, next iteration of the process can be executed. If repeating $m-1$ times is executed without jumping to somewhere else, n is definitely composite number; therefore, the process can be terminated. If repeating $k$ times is executed without returning a value, n is a prime number with a probability of error rate $1/4^k$; therefore the process is terminated.
 
@@ -171,17 +166,18 @@ Given a positive odd integer $n>4$, an integer $k$ is chosen by the tester to de
 
 
 \section{Conclusion And Future Work}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...   
+\subsection{Conclusion}
+As a result, our analyzes and experimental results shows that Miller-Rabin probabilistic algorithm for primality test provides faster results for very big integers with small change of error when we compare against deterministic primality test algorithms. After our analyzes and results, there are open questions about primality test algorithms:
+\begin{enumerate}
+    \item Is it possible to improve Miller - Rabin algorithm to reduce the complexity $O(klog^{3}n)$ ?
+    \item Is it possible to improve Miller- Rabin algorithm to reduce the possibility of error ?
+    \item Is probabilistic algorithms or deterministic algorithms always preferable against each other or is there any break point to change our algorithm preference ? 
+\end{enumerate}
+\subsection{Future Work}
+We are planning to analyze Miller-Rabin algorithm using FFT-based multiplication (Harvey-Hoeven alogrithm) which can push the running time down to $O(klogn).$  
     
-\section*{References}
-    Write here ... \\
-    ...  \\
-    ...  \\
-    ...  
-    
+\printbibliography
+
 \section*{Appendix}
     Write here ... \\
     ...  \\
